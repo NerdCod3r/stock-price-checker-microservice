@@ -7,15 +7,35 @@ const cors        = require('cors');
 const apiRoutes         = require('./routes/api.js');
 const fccTestingRoutes  = require('./routes/fcctesting.js');
 const runner            = require('./test-runner');
+const ninetyDaysInSeconds = 90 * 24 * 60 * 60;
+
+const helmet = require('helmet');
+
+const mongoose = require('mongoose');
+const uri = process.env.MONGO_URI;
+
+mongoose.connect(uri)
+.then(()=>{console.log(`Connected to MongoDB!`)})
+.catch(err=>{ console.log('Error connecting to MongoDB!')});
 
 const app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({origin: '*'})); //For FCC testing purposes only
+app.use(helmet.hidePoweredBy());
+
+helmet.frameguard({action: 'deny'});
+helmet.hsts({maxAge:ninetyDaysInSeconds, force:true});
+helmet.noCache();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Scripts and CSS must be from me.
+app.use(express.static(__dirname + '/public'));
+
+app.use(helmet.contentSecurityPolicy({directives:{defaultSrc:["'self'"], scriptSrc:["'self'", "trusted-cdn.com"]}}))
 
 //Index page (static HTML)
 app.route('/')
