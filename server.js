@@ -12,6 +12,7 @@ const ninetyDaysInSeconds = 90 * 24 * 60 * 60;
 const helmet = require('helmet');
 
 const mongoose = require('mongoose');
+const path = require('path');
 const uri = process.env.MONGO_URI;
 
 mongoose.connect(uri)
@@ -33,9 +34,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Scripts and CSS must be from me.
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '/public')));
 
-app.use(helmet.contentSecurityPolicy({directives:{defaultSrc:["'self'"], scriptSrc:["'self'", "trusted-cdn.com"]}}))
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+    defaultSrc:["'self'"], 
+    scriptSrc:["'self'"],
+    styleSrc: ["'self'"],
+    imgSrc: ["'self'"]
+  }
+})
+);
 
 //Index page (static HTML)
 app.route('/')

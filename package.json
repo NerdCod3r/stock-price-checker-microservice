@@ -18,6 +18,7 @@
 		"mocha": "^3.2.0",
 		"mongoose": "^8.9.5",
 		"node-fetch": "^3.3.2",
+		"path": "^0.12.7",
 		"xhr2": "^0.2.1"
 	},
 	"repository": {

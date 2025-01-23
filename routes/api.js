@@ -104,8 +104,4 @@ module.exports = function (app) {
       }
     });
     
-    app.route('/api/stock-prices')
-    .post( async function (request, response){
-      
-    });
 };
